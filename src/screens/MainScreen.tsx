@@ -3,18 +3,18 @@ import {StyleSheet} from 'react-native';
 import {
   Button,
   Divider,
-  Layout,
   TopNavigation,
   Modal,
   Input,
-  Text,
 } from '@ui-kitten/components';
 import {ScrollView} from 'react-native';
 import {View} from 'react-native';
-import {RootContext} from '../../App';
+import {Data, RootContext} from '../../App';
 import {useContext} from 'react';
 import {useState} from 'react';
-// import {ImageOverlay} from '../components/ImageOverlayComponent';
+import UsersArray from '../components/UsersArray';
+import {processData} from '../lib/utils';
+import {ImageOverlay} from '../components/ImageOverlayComponent';
 // import BackgroundImage from '../components/BackgroundImage';
 
 const MainScreen = ({navigation: any}) => {
@@ -22,8 +22,11 @@ const MainScreen = ({navigation: any}) => {
   const [visible, setVisible] = useState(false);
   const [value, setValue] = useState('');
 
-  const navigateDetails = () => {
-    console.log(data);
+  const handleProcess = () => {
+    console.log('original data:', data);
+    const newData = processData(data.users);
+    console.log('latest data:', newData);
+    setData(newData);
   };
 
   const toggleModal = () => {
@@ -31,12 +34,12 @@ const MainScreen = ({navigation: any}) => {
   };
 
   const handleAddUser = () => {
-    const newTotal = [...data.total];
-    newTotal.push(value);
+    const newUsers = [...data.users];
+    newUsers.push(value);
     if (value) {
       setData({
         ...data,
-        total: newTotal,
+        users: newUsers,
       });
       setValue('');
     }
@@ -45,42 +48,44 @@ const MainScreen = ({navigation: any}) => {
   };
 
   return (
-    <ScrollView>
-      <Layout>
-        <TopNavigation title="许下的诺言" alignment="center" />
-        <Divider />
-
-        <Layout style={[styles.buttonContainer, styles.heigh300]}>
-          <Button style={styles.mainButton} onPress={navigateDetails}>
-            离经叛道
-          </Button>
-        </Layout>
-        <Layout style={[styles.buttonContainer, styles.heigh100]}>
-          <Button style={styles.addButton} onPress={toggleModal}>
-            入
-          </Button>
-        </Layout>
-        <Modal
-          style={styles.modalContainer}
-          visible={visible}
-          onBackdropPress={toggleModal}
-          backdropStyle={styles.backdrop}>
-          <View style={styles.inputContainer}>
-            <Input value={value} onChangeText={setValue} />
-          </View>
-          <Button style={styles.button} onPress={handleAddUser}>
-            遁入
-          </Button>
-        </Modal>
-        <Layout style={[styles.usersContainer, styles.heighAll]}>
-          {data.total.map((user) => (
-            <View key={user} style={styles.userContainer}>
-              <Text style={styles.text}>{user}</Text>
+    <View style={[styles.container, styles.bgt]}>
+      <TopNavigation title="许下的诺言" alignment="center" />
+      <Divider />
+      <ImageOverlay
+        style={styles.imageContainer}
+        source={require('../../assets/main.png')}>
+        <ScrollView>
+          <View style={[styles.imageViewContainer, styles.bgt]}>
+            <View style={[styles.buttonContainer, styles.heigh200, styles.bgt]}>
+              <Button style={styles.mainButton} onPress={handleProcess}>
+                离经叛道
+              </Button>
             </View>
-          ))}
-        </Layout>
-      </Layout>
-    </ScrollView>
+            <View style={[styles.buttonContainer, styles.heigh200]}>
+              <Button style={styles.addButton} onPress={toggleModal}>
+                入
+              </Button>
+            </View>
+            <Modal
+              style={styles.modalContainer}
+              visible={visible}
+              onBackdropPress={toggleModal}
+              backdropStyle={styles.backdrop}>
+              <View style={styles.inputContainer}>
+                <Input value={value} onChangeText={setValue} />
+              </View>
+              <Button style={styles.button} onPress={handleAddUser}>
+                遁入
+              </Button>
+            </Modal>
+            <View style={styles.center}>
+              <UsersArray users={data.users} />
+            </View>
+          </View>
+
+        </ScrollView>
+      </ImageOverlay>
+    </View>
   );
 };
 
@@ -88,37 +93,33 @@ export default MainScreen;
 
 const styles = StyleSheet.create({
   // safeAreaView: {flex: 1, backgroundColor: 'transparent'},
+  bgt: {backgroundColor: 'transparent'},
+  imageContainer: {
+    height: '100%',
+    width: '100%',
+  },
+  imageViewContainer: {
+    position: 'absolute',
+    height: '100%',
+    width: '100%',
+    left: 0,
+    right: 0,
+    bottom: 0,
+  },
   container: {flex: 1},
   center: {flex: 1, justifyContent: 'center', alignItems: 'center'},
   buttonContainer: {
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'transparent',
-  },
-  usersContainer: {
-    display: 'flex',
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'flex-start',
-    margin: 10,
-  },
-  text: {
-    color: '#fff',
-  },
-  userContainer: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    height: 100,
-    width: 100,
-    margin: 5,
-    backgroundColor: '#3366ff',
   },
   heigh300: {height: 300},
+  heigh200: {height: 200},
   heigh100: {height: 100},
-  heighAll: {height: '100%'},
   mainButton: {
+    marginTop: 210,
     borderWidth: 1,
     borderColor: 'rgba(0,0,0,0.2)',
+    // backgroundColor: 'rgba(26, 115, 232, 0.5)',
     alignItems: 'center',
     justifyContent: 'center',
     width: 100,
@@ -126,6 +127,7 @@ const styles = StyleSheet.create({
     borderRadius: 50,
   },
   addButton: {
+    // marginTop: 100,
     borderWidth: 1,
     borderColor: 'rgba(0,0,0,0.2)',
     alignItems: 'center',
@@ -157,5 +159,8 @@ const styles = StyleSheet.create({
   inputContainer: {
     width: '80%',
     height: 100,
+  },
+  scrollView: {
+    height: 900,
   },
 });

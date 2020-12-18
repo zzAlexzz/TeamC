@@ -33,16 +33,16 @@ import {createContext} from 'react';
 //   props?: Partial<ImageProps>,
 // ): React.ReactElement<ImageProps> => <Icon {...props} name="heart" />;
 
-const initialState = {
-  total: [],
+const initialState: Data = {
+  users: [],
   team1: [],
   team2: [],
 };
 
-export const RootContext = createContext(initialState);
+export const RootContext = createContext<Data>(initialState);
 
 export default (): React.ReactFragment => {
-  const [data, setData] = useState(initialState);
+  const [data, setData] = useState<Data>(initialState);
 
   // const toggleStyle = (data) => {
   //   setData(newData);
@@ -87,3 +87,9 @@ const styles = StyleSheet.create({
     marginVertical: 16,
   },
 });
+
+export type Data = {
+  users: string[],
+  team1: string[],
+  team2: string[],
+};
