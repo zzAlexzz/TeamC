@@ -53,15 +53,15 @@ const MainScreen = ({navigation: any}) => {
       <Divider />
       <ImageOverlay
         style={styles.imageContainer}
-        source={require('../../assets/main.png')}>
+        source={require('../../assets/main.jpg')}>
         <ScrollView>
-          <View style={[styles.imageViewContainer, styles.bgt]}>
-            <View style={[styles.buttonContainer, styles.heigh200, styles.bgt]}>
+          <View style={styles.imageViewContainer}>
+            <View style={[styles.buttonContainer, styles.heigh200]}>
               <Button style={styles.mainButton} onPress={handleProcess}>
                 离经叛道
               </Button>
             </View>
-            <View style={[styles.buttonContainer, styles.heigh200]}>
+            <View style={[styles.buttonContainer, styles.heigh100]}>
               <Button style={styles.addButton} onPress={toggleModal}>
                 入
               </Button>
@@ -93,7 +93,6 @@ export default MainScreen;
 
 const styles = StyleSheet.create({
   // safeAreaView: {flex: 1, backgroundColor: 'transparent'},
-  bgt: {backgroundColor: 'transparent'},
   imageContainer: {
     height: '100%',
     width: '100%',
@@ -116,7 +115,6 @@ const styles = StyleSheet.create({
   heigh200: {height: 200},
   heigh100: {height: 100},
   mainButton: {
-    marginTop: 210,
     borderWidth: 1,
     borderColor: 'rgba(0,0,0,0.2)',
     // backgroundColor: 'rgba(26, 115, 232, 0.5)',
